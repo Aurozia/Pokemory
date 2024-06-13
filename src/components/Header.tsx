@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ setArray, createArray }) => {
     <header className="bg-primary w-full mb-4 flex justify-between items-center py-2 px-10">
       <section className="w-[150px] text-2xl">
         <a
-          className="ring-none outline-none hover:text-secondary focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm"
+          className="ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm"
           href="/"
         >
           Pokemory
