@@ -23,7 +23,7 @@ export default function Modal({
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="bg-hover p-8 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-hover px-4 py-8 sm:p-8 rounded-lg shadow-lg max-w-md w-full max-sm:mx-5">
         {congratulations ? (
           <>
             <h2 className="text-2xl mb-4 text-center">
