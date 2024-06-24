@@ -1,66 +1,20 @@
-import { useState } from "react";
-import Pokeball from "./../assets/pokeballIcon.svg";
-import Pokemon6 from "./../assets/pokemon/aquali.png";
-import Pokemon1 from "./../assets/pokemon/bulbizarre.png";
-import Pokemon3 from "./../assets/pokemon/carapuce.png";
-import Pokemon5 from "./../assets/pokemon/evoli.png";
-import Pokemon4 from "./../assets/pokemon/pikachu.png";
-import Pokemon8 from "./../assets/pokemon/pyroli.png";
-import Pokemon2 from "./../assets/pokemon/salameche.png";
-import Pokemon7 from "./../assets/pokemon/voltali.png";
+import { useEffect, useState } from "react";
+import { pokemonList } from "../data";
+import Card from "./Card";
 
-interface Props {
-  array: number[][];
-  setArray: React.Dispatch<React.SetStateAction<number[][]>>;
+interface BoardProps {
+  difficulty: "easy" | "normal" | "hard";
 }
 
-export default function Board({ array, setArray }: Props) {
-  const [ready, setReady] = useState(true);
-  const [firstCardClicked, setFirstCardClicked] = useState<number[]>([]);
-  const [nbCardsReturned, setNbCardsReturned] = useState(0);
+export default function Board({ difficulty }: BoardProps) {
+  const [cards, setCards] = useState<string[]>([]);
+  const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
+  const [matchedIndices, setMatchedIndices] = useState<number[]>([]);
 
-  const result = [
-    [1, 2, 7, 6],
-    [4, 1, 3, 8],
-    [3, 8, 6, 5],
-    [5, 2, 4, 7],
-  ];
-
-  function getImage(value: number) {
-    let imgTxt: string = "";
-
-    switch (value) {
-      case 1:
-        imgTxt = Pokemon1;
-        break;
-      case 2:
-        imgTxt = Pokemon2;
-        break;
-      case 3:
-        imgTxt = Pokemon3;
-        break;
-      case 4:
-        imgTxt = Pokemon4;
-        break;
-      case 5:
-        imgTxt = Pokemon5;
-        break;
-      case 6:
-        imgTxt = Pokemon6;
-        break;
-      case 7:
-        imgTxt = Pokemon7;
-        break;
-      case 8:
-        imgTxt = Pokemon8;
-        break;
-      default:
-        console.log("Le pokémon sauvage s'est enfuit");
-        break;
-    }
-
-    return imgTxt;
-  }
+  useEffect(() => {
+    generateCards();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty]);
 
   function getPokemonName(value: string) {
     const segments = value.split("/");
@@ -69,73 +23,99 @@ export default function Board({ array, setArray }: Props) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-  function check(row: number, col: number) {
-    if (ready) {
-      setNbCardsReturned((prevNbCardsReturned) => prevNbCardsReturned + 1);
+  const shuffle = (array: string[]) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
 
-      setArray((prevArray) => {
-        const newArray = [...prevArray];
-        newArray[row][col] = result[row][col];
-
-        if (nbCardsReturned === 1) {
-          setReady(false);
-          if (
-            newArray[row][col] !==
-            result[firstCardClicked[0]][firstCardClicked[1]]
-          ) {
-            setTimeout(() => {
-              newArray[row][col] = 0;
-              newArray[firstCardClicked[0]][firstCardClicked[1]] = 0;
-              setReady(true);
-            }, 750);
-          } else {
-            setReady(true);
-            // setTimeout(() => {
-            //   setReady(true);
-            // }, 1000);
-          }
-          setNbCardsReturned(0);
-        }
-
-        setFirstCardClicked([row, col]);
-        return newArray;
-      });
+  const hasAdjacentPairs = (cards: string[]): boolean => {
+    for (let i = 0; i < cards.length - 1; i++) {
+      if (cards[i] === cards[i + 1]) {
+        return true;
+      }
     }
-  }
+    return false;
+  };
+
+  const generateCards = () => {
+    const numberOfPairs = getNumberOfPairs();
+    const shuffledPokemonList = shuffle(pokemonList).slice(0, numberOfPairs);
+    const doubledCards = [...shuffledPokemonList, ...shuffledPokemonList];
+
+    let shuffledCards;
+    do {
+      shuffledCards = shuffle(doubledCards);
+    } while (hasAdjacentPairs(shuffledCards));
+
+    setCards(shuffledCards);
+    setFlippedIndices([]);
+    setMatchedIndices([]);
+  };
+
+  const handleCardClick = (index: number) => {
+    if (
+      flippedIndices.length < 2 &&
+      !flippedIndices.includes(index) &&
+      !matchedIndices.includes(index)
+    ) {
+      const newFlippedIndices = [...flippedIndices, index];
+      setFlippedIndices(newFlippedIndices);
+
+      if (newFlippedIndices.length === 2) {
+        setTimeout(() => compareCards(newFlippedIndices), 500);
+      }
+    }
+  };
+
+  const compareCards = (indices: number[]) => {
+    const [firstIndex, secondIndex] = indices;
+    if (cards[firstIndex] === cards[secondIndex]) {
+      setMatchedIndices([...matchedIndices, firstIndex, secondIndex]);
+    }
+    setTimeout(() => {
+      setFlippedIndices([]);
+    }, 500);
+  };
+
+  const getNumberOfPairs = () => {
+    switch (difficulty) {
+      case "easy":
+        return 8;
+      case "normal":
+        return 18;
+      case "hard":
+        return 32;
+      default:
+        return 8;
+    }
+  };
+
+  const getGridColumns = () => {
+    switch (difficulty) {
+      case "easy":
+        return "grid-cols-4";
+      case "normal":
+        return "grid-cols-6";
+      case "hard":
+        return "grid-cols-8";
+      default:
+        return "grid-cols-4";
+    }
+  };
 
   return (
-    <main>
-      {array.map((row, rowIndex) => (
-        <div
-          key={rowIndex}
-          className="flex justify-center items-center gap-4 py-2"
-        >
-          {row.map((_, colIndex) =>
-            array[rowIndex][colIndex] === 0 ? (
-              <button
-                key={`${rowIndex}-${colIndex}`}
-                className="bg-red-400 rounded-sm size-[150px]"
-                onClick={() => check(rowIndex, colIndex)}
-              >
-                <img
-                  src={Pokeball}
-                  alt="Pokeball"
-                  className="mx-auto size-[100px] pointer-events-none"
-                />
-              </button>
-            ) : (
-              <img
-                key={`${rowIndex}-${colIndex}`}
-                src={getImage(array[rowIndex][colIndex])}
-                alt={`Pokemon ${getPokemonName(
-                  getImage(array[rowIndex][colIndex])
-                )}`}
-                className="bg-white rounded-sm size-[150px] pointer-events-none"
-              />
-            )
-          )}
-        </div>
+    <div className={`grid gap-4 ${getGridColumns()}`}>
+      {cards.map((card, index) => (
+        <Card
+          key={index}
+          name={getPokemonName(card)}
+          image={card}
+          flipped={
+            flippedIndices.includes(index) || matchedIndices.includes(index)
+          }
+          matched={matchedIndices.includes(index)}
+          onClick={() => handleCardClick(index)}
+        />
       ))}
-    </main>
+    </div>
   );
 }

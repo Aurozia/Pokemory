@@ -1,13 +1,12 @@
 interface HeaderProps {
-  setArray: React.Dispatch<React.SetStateAction<number[][]>>;
-  createArray: (size: number) => number[][];
+  difficulty: "easy" | "normal" | "hard";
+  handleDifficultyChange: (difficulty: "easy" | "normal" | "hard") => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ setArray, createArray }) => {
-  const handleSizeChange = (newSize: number) => {
-    setArray(createArray(newSize));
-  };
-
+export default function Header({
+  difficulty,
+  handleDifficultyChange,
+}: HeaderProps) {
   return (
     <header className="bg-primary w-full mb-4 flex justify-between items-center py-2 px-10">
       <section className="w-[150px] text-2xl">
@@ -20,20 +19,32 @@ export const Header: React.FC<HeaderProps> = ({ setArray, createArray }) => {
       </section>
       <section className="space-x-4">
         <button
-          className="hover:underline hover:underline-offset-4 ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm"
-          onClick={() => handleSizeChange(4)}
+          className={`ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm ${
+            difficulty === "easy"
+              ? "underline underline-offset-4"
+              : "hover:underline hover:underline-offset-4"
+          }`}
+          onClick={() => handleDifficultyChange("easy")}
         >
           Easy
         </button>
         <button
-          className="hover:underline hover:underline-offset-4 ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm"
-          onClick={() => handleSizeChange(6)}
+          className={`ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm ${
+            difficulty === "normal"
+              ? "underline underline-offset-4"
+              : "hover:underline hover:underline-offset-4"
+          }`}
+          onClick={() => handleDifficultyChange("normal")}
         >
           Normal
         </button>
         <button
-          className="hover:underline hover:underline-offset-4 ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm"
-          onClick={() => handleSizeChange(8)}
+          className={`ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm ${
+            difficulty === "hard"
+              ? "underline underline-offset-4"
+              : "hover:underline hover:underline-offset-4"
+          }`}
+          onClick={() => handleDifficultyChange("hard")}
         >
           Hard
         </button>
@@ -48,4 +59,4 @@ export const Header: React.FC<HeaderProps> = ({ setArray, createArray }) => {
       </section>
     </header>
   );
-};
+}
