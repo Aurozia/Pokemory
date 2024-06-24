@@ -113,9 +113,9 @@ export default function Board({
       case "easy":
         return "grid-cols-4";
       case "normal":
-        return "grid-cols-6";
+        return "grid-cols-4 md:grid-cols-6";
       case "hard":
-        return "grid-cols-8";
+        return "grid-cols-4 lg:grid-cols-6 xl:grid-cols-8";
       default:
         return "grid-cols-4";
     }

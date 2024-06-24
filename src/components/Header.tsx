@@ -8,8 +8,8 @@ export default function Header({
   handleDifficultyChange,
 }: HeaderProps) {
   return (
-    <header className="bg-primary w-full mb-4 flex justify-between items-center py-2 px-10">
-      <section className="w-[150px] text-2xl">
+    <header className="bg-primary w-full mb-4 flex justify-between items-center py-2 px-2 sm:px-10">
+      <section className="sm:w-[150px] text-xl sm:text-2xl">
         <a
           className="ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm"
           href="/"
@@ -49,7 +49,7 @@ export default function Header({
           Hard
         </button>
       </section>
-      <section className="w-[150px] text-right">
+      <section className="w-[150px] text-right max-sm:hidden">
         <a
           className="hover:underline hover:underline-offset-4 ring-none outline-none focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-text rounded-sm py-1"
           href="https://aurozia.github.io/"

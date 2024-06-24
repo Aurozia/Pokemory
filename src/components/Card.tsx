@@ -17,7 +17,7 @@ export default function Card({
 }: CardProps) {
   return (
     <button
-      className={`size-[130px] ring-none outline-none focus:rounded-sm focus:outline focus:outline-white focus:outline-2 focus:outline-offset-2 cursor-pointer perspective transform transition-transform duration-1000 ${
+      className={`size-[50px] xs:size-[70px] sm:size-[100px] md:size-[130px] ring-none outline-none focus:rounded-sm focus:outline focus:outline-white focus:outline-2 focus:outline-offset-2 cursor-pointer perspective transform transition-transform duration-1000 ${
         matched ? "animate-scale" : ""
       }`}
       onClick={onClick}
@@ -31,15 +31,15 @@ export default function Card({
           <img
             src={Pokeball}
             alt="Pokeball"
-            className="mx-auto size-[80px] pointer-events-none"
+            className="mx-auto size-[30px] xs:size-[50px] sm:size-[70px] md:size-[90px] pointer-events-none"
           />
         </div>
         <div className="w-full h-full absolute backface-hidden rotate-y-180 overflow-hidden">
-          <div className="bg-white rounded-sm size-[130px] flex justify-center items-center">
+          <div className="bg-white rounded-sm size-[50px] xs:size-[70px] sm:size-[100px] md:size-[130px] flex justify-center items-center">
             <img
               src={image}
               alt={`Pokemon ${name}`}
-              className="size-[110px] pointer-events-none"
+              className="size-[50px] xs:size-[70px] sm:size-[90px] md:size-[110px] pointer-events-none"
             />
           </div>
         </div>
