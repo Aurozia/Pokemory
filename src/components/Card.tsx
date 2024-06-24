@@ -16,14 +16,14 @@ export default function Card({
   onClick,
 }: CardProps) {
   return (
-    <div
-      className={`size-[130px] cursor-pointer group perspective transform transition-transform duration-1000 ${
+    <button
+      className={`size-[130px] ring-none outline-none focus:rounded-sm focus:outline focus:outline-white focus:outline-2 focus:outline-offset-2 cursor-pointer perspective transform transition-transform duration-1000 ${
         matched ? "animate-scale" : ""
       }`}
       onClick={onClick}
     >
       <div
-        className={`bg-hover rounded-sm w-full h-full relative preserve-3d ${
+        className={`bg-hover hover:bg-hover/70 rounded-sm w-full h-full relative preserve-3d ${
           flipped ? "rotate-y-180" : ""
         } duration-1000`}
       >
@@ -44,6 +44,6 @@ export default function Card({
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

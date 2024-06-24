@@ -4,9 +4,15 @@ import Card from "./Card";
 
 interface BoardProps {
   difficulty: "easy" | "normal" | "hard";
+  setGameCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Board({ difficulty }: BoardProps) {
+export default function Board({
+  difficulty,
+  setGameCompleted,
+  setShowModal,
+}: BoardProps) {
   const [cards, setCards] = useState<string[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [matchedIndices, setMatchedIndices] = useState<number[]>([]);
@@ -15,6 +21,18 @@ export default function Board({ difficulty }: BoardProps) {
     generateCards();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [difficulty]);
+
+  useEffect(() => {
+    if (
+      cards.length !== 0 &&
+      matchedIndices.length !== 0 &&
+      matchedIndices.length === cards.length
+    ) {
+      setGameCompleted(true);
+      setShowModal(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchedIndices, cards.length, setGameCompleted, setShowModal]);
 
   function getPokemonName(value: string) {
     const segments = value.split("/");
@@ -49,6 +67,7 @@ export default function Board({ difficulty }: BoardProps) {
     setCards(shuffledCards);
     setFlippedIndices([]);
     setMatchedIndices([]);
+    setGameCompleted(false);
   };
 
   const handleCardClick = (index: number) => {
@@ -103,19 +122,21 @@ export default function Board({ difficulty }: BoardProps) {
   };
 
   return (
-    <div className={`grid gap-4 ${getGridColumns()}`}>
-      {cards.map((card, index) => (
-        <Card
-          key={index}
-          name={getPokemonName(card)}
-          image={card}
-          flipped={
-            flippedIndices.includes(index) || matchedIndices.includes(index)
-          }
-          matched={matchedIndices.includes(index)}
-          onClick={() => handleCardClick(index)}
-        />
-      ))}
-    </div>
+    <>
+      <div className={`grid gap-4 ${getGridColumns()}`}>
+        {cards.map((card, index) => (
+          <Card
+            key={index}
+            name={getPokemonName(card)}
+            image={card}
+            flipped={
+              flippedIndices.includes(index) || matchedIndices.includes(index)
+            }
+            matched={matchedIndices.includes(index)}
+            onClick={() => handleCardClick(index)}
+          />
+        ))}
+      </div>
+    </>
   );
 }
